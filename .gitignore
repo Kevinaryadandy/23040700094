@@ -1,32 +1,112 @@
-# Prerequisites
-*.d
+#include <stdio.h>
+#include <stdlib.h>
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+struct node
+{
+    char nama [10];
+    int nilai;
+    struct node *next;
+};
 
-# Precompiled Headers
-*.gch
-*.pch
+struct node *head;
+struct node *tail;
+struct node *curr;
+struct node *temp;
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+void display() {
+    if (head==NULL)
+    {
+        printf ("\nlingked list kosong!");
+    }
+    else {
+        curr=head;
+        while (curr != NULL)
+        {
+            printf("[%s %d | %x] <---", curr->nama,curr->nilai,curr->next);
+            curr=curr->next;
+        }
+        puts ("");
+    }
+}
+void push () {
+    curr = (struct node*)malloc(sizeof(struct node));
+    printf("\nPush nama =");
+    scanf("%s",&curr->nama);
+    printf("push nilai =");
+    scanf("%d",&curr->nilai);
 
-# Fortran module files
-*.mod
-*.smod
+    if (head==NULL) {
+        head=curr;
+        tail=curr;
+    }
+    tail->next = NULL;
+    display();
+}
+void pop () {
+    if (head==NULL)
+    {
+        printf("\nlingked list kosong!");
+    }
+    else if (head == tail)
+    {
+        printf("\npop data = %s %d \n",tail->nama,tail->nilai);
+        head=NULL;
+        tail=NULL;
+        free(curr);
+    }
+    else {
+        printf("\npop data = %s %d \n",head->nama,head->nilai);
+        temp=head;
+        if (temp->next != NULL)
+        {
+            temp=temp->next;
+            free(head);
+            head=temp;
+        }
+    }
+    display();
+}
+main () {
+    int menu;
+    while (1)
+    {
+        printf("\n\n Welcome to lingked list");
+        printf("\n\t PILIHAN MENU\n\n");
+        printf("1. push\n");
+        printf("2. pop\n");
+        printf("3. display\n");
+        printf("4. quit\n");
+        printf("masukan pilihan menu=");
+        scanf("%d",&menu);
+        switch (menu)
+        {
+        case 1 : {
+            push();
+        }
+        break;
+        case 2 : {
+            pop();
+        }
+        break;
+        case 3 : {
+            display();
+        }
+        break;
+        case 4 : {
+            printf("\n\n\tprogram telah selesai");
+            return 0;
+        }
+        break;
+        default : {
+            printf("\npilihan tidak ada\n");
+            break;
+        }
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+        }
 
-# Executables
-*.exe
-*.out
-*.app
+    }
+
+}
+
+
+
