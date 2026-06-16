@@ -1,0 +1,256 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyMCaTwhWwaZHu+bRmhu6MUO",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Kevinaryadandy/23040700094/blob/main/Blockchain%20Project\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!pip install -q streamlit pyngrok"
+      ],
+      "metadata": {
+        "id": "UsHcB2OlLf9P"
+      },
+      "execution_count": 50,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from pyngrok import ngrok\n",
+        "\n",
+        "ngrok.set_auth_token(\"3FAzL9bjK3LTRFRZVE8l4F7GeiY_5JK2UUSKzxkaoqctB42c9\")"
+      ],
+      "metadata": {
+        "id": "rhuab-8KLjbO"
+      },
+      "execution_count": 52,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "%%writefile app.py\n",
+        "\n",
+        "import streamlit as st\n",
+        "import hashlib\n",
+        "\n",
+        "st.set_page_config(\n",
+        "    page_title=\"EduChain\",\n",
+        "    page_icon=\"🎓\",\n",
+        "    layout=\"wide\"\n",
+        ")\n",
+        "\n",
+        "st.markdown(\"\"\"\n",
+        "<style>\n",
+        "\n",
+        ".stApp {\n",
+        "    background-color: #0f172a;\n",
+        "}\n",
+        "\n",
+        ".title {\n",
+        "    text-align:center;\n",
+        "    font-size:50px;\n",
+        "    font-weight:bold;\n",
+        "    color:#38bdf8;\n",
+        "}\n",
+        "\n",
+        ".subtitle {\n",
+        "    text-align:center;\n",
+        "    color:white;\n",
+        "    font-size:18px;\n",
+        "    margin-bottom:30px;\n",
+        "}\n",
+        "\n",
+        ".hash-box {\n",
+        "    background:#111827;\n",
+        "    color:#22c55e;\n",
+        "    padding:15px;\n",
+        "    border-radius:10px;\n",
+        "    word-wrap:break-word;\n",
+        "}\n",
+        "\n",
+        "</style>\n",
+        "\"\"\", unsafe_allow_html=True)\n",
+        "\n",
+        "with st.sidebar:\n",
+        "    st.title(\"🎓 EduChain\")\n",
+        "    st.markdown(\"---\")\n",
+        "    st.write(\"📄 Register Diploma\")\n",
+        "    st.write(\"🔍 Verify Diploma\")\n",
+        "    st.write(\"⛓ Blockchain Explorer\")\n",
+        "\n",
+        "st.markdown(\n",
+        "    '<div class=\"title\">EDUCHAIN</div>',\n",
+        "    unsafe_allow_html=True\n",
+        ")\n",
+        "\n",
+        "st.markdown(\n",
+        "    '<div class=\"subtitle\">Blockchain Diploma Verification System</div>',\n",
+        "    unsafe_allow_html=True\n",
+        ")\n",
+        "\n",
+        "col1,col2,col3 = st.columns(3)\n",
+        "\n",
+        "with col1:\n",
+        "    st.metric(\"Diploma Registered\", \"127\")\n",
+        "\n",
+        "with col2:\n",
+        "    st.metric(\"Verification\", \"845\")\n",
+        "\n",
+        "with col3:\n",
+        "    st.metric(\"Blockchain\", \"ONLINE\")\n",
+        "\n",
+        "st.divider()\n",
+        "\n",
+        "st.subheader(\"📄 Register Diploma\")\n",
+        "\n",
+        "student_name = st.text_input(\n",
+        "    \"Student Name\"\n",
+        ")\n",
+        "\n",
+        "student_id = st.text_input(\n",
+        "    \"Student ID\"\n",
+        ")\n",
+        "\n",
+        "uploaded_file = st.file_uploader(\n",
+        "    \"Upload Diploma PDF\",\n",
+        "    type=[\"pdf\"]\n",
+        ")\n",
+        "\n",
+        "if uploaded_file:\n",
+        "\n",
+        "    file_bytes = uploaded_file.read()\n",
+        "\n",
+        "    file_hash = hashlib.sha256(\n",
+        "        file_bytes\n",
+        "    ).hexdigest()\n",
+        "\n",
+        "    st.success(\"Hash Generated Successfully\")\n",
+        "\n",
+        "    st.markdown(\n",
+        "        f\"\"\"\n",
+        "        <div class='hash-box'>\n",
+        "        {file_hash}\n",
+        "        </div>\n",
+        "        \"\"\",\n",
+        "        unsafe_allow_html=True\n",
+        "    )\n",
+        "\n",
+        "    if st.button(\"🔗 Register to Blockchain\"):\n",
+        "\n",
+        "        st.success(\n",
+        "            \"Diploma Successfully Registered\"\n",
+        "        )\n",
+        "\n",
+        "        st.write(\n",
+        "            \"Nama Mahasiswa:\",\n",
+        "            student_name\n",
+        "        )\n",
+        "\n",
+        "        st.write(\n",
+        "            \"Nim Mahasiswa:\",\n",
+        "            student_id\n",
+        "        )\n",
+        "\n",
+        "        st.write(\n",
+        "            \"Certificate Hash:\",\n",
+        "            file_hash\n",
+        "        )"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "8KM4LmccL2zG",
+        "outputId": "62db53c8-7132-42e9-b3c7-669e24a6ef58"
+      },
+      "execution_count": 53,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Overwriting app.py\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!pkill -f streamlit"
+      ],
+      "metadata": {
+        "id": "tnseibprL9N5"
+      },
+      "execution_count": 54,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!streamlit run app.py > /content/logs.txt 2>&1 &"
+      ],
+      "metadata": {
+        "id": "fwt74EHIMA4f"
+      },
+      "execution_count": 55,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from pyngrok import ngrok\n",
+        "\n",
+        "ngrok.kill()\n",
+        "\n",
+        "url = ngrok.connect(8501)\n",
+        "\n",
+        "print(\"LINK WEBSITE:\")\n",
+        "print(url.public_url)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "6Velp7f0MGct",
+        "outputId": "a4a8f265-e6d7-40a0-aafa-b4b1f68aa196"
+      },
+      "execution_count": 56,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "LINK WEBSITE:\n",
+            "https://thickness-wound-placard.ngrok-free.dev\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
